@@ -1,14 +1,21 @@
+
 run: main
 	./main
 
-CFLAGS = -g -lraylib -lm -ldl -lpthread -lGL -lX11
+CFLAGS = -Wall -Wextra -O2 -std=c11
+LDFLAGS = -lraylib -lm -ldl -lpthread -lGL -lX11
 
-main: main.c node.o
-	gcc main.c node.o -o main $(CFLAGS)
+OBJS = main.o node.o
 
-node.o: node.c
+main: $(OBJS)
+	gcc $(OBJS) -o main $(LDFLAGS)
+
+# Track header dependencies so changes to headers (including config.h) trigger rebuilds
+main.o: main.c node.h config.h
+	gcc -c main.c $(CFLAGS)
+
+node.o: node.c node.h config.h
 	gcc -c node.c $(CFLAGS)
 
 clean:
-	rm *.o
-	rm main
+	rm -f *.o main
