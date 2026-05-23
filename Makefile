@@ -1,17 +1,17 @@
-CFLAGS = -Wall -Wextra -O2 -std=c11
+SRCDIR = src
+CFLAGS = -Wall -Wextra -O2 -std=c11 -I$(SRCDIR)
 LDFLAGS = -lraylib -lm -ldl -lpthread -lGL -lX11
 
 OBJS = main.o node.o
 
-
 main: $(OBJS)
 	gcc $(OBJS) -o main $(LDFLAGS)
 
-main.o: main.c node.h config.h
-	gcc -c main.c $(CFLAGS)
+main.o: $(SRCDIR)/main.c $(SRCDIR)/node.h $(SRCDIR)/config.h
+	gcc -c $(SRCDIR)/main.c $(CFLAGS) -o main.o
 
-node.o: node.c node.h config.h
-	gcc -c node.c $(CFLAGS)
+node.o: $(SRCDIR)/node.c $(SRCDIR)/node.h $(SRCDIR)/config.h
+	gcc -c $(SRCDIR)/node.c $(CFLAGS) -o node.o
 
 
 .PHONY: run clean
