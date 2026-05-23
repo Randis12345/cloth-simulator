@@ -21,4 +21,8 @@
 // Other tunables
 #define ANCHOR_PROBABILITY 100
 
+// Physics substeps per frame: number of physics updates to run each frame
+// Higher values increase simulation stability at the cost of CPU.
+#define UPDATES_PER_FRAME 4
+
 #endif // CONFIG_H

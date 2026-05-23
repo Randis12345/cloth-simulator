@@ -64,13 +64,16 @@ int main(void)
     
     
     SetTargetFPS(TARGET_FPS);               // Set our game to run at TARGET_FPS frames-per-second
-    int draw_amount = 0;
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
         // Update
-        UpdateNodeGroup(&mainsheet,GetFrameTime());
-    
+        float frameTime = GetFrameTime();
+        float subDt = frameTime / (float) UPDATES_PER_FRAME;
+        for (int u = 0; u < UPDATES_PER_FRAME; ++u) {
+            UpdateNodeGroup(&mainsheet, subDt);
+        }
+
         // Draw
         BeginDrawing();
             ClearBackground(RAYWHITE);
