@@ -1,5 +1,6 @@
 #include "node.h"
 #include "raylib.h"
+#include "config.h"
 #include <stdlib.h>
 #include <time.h>
 
@@ -25,7 +26,7 @@ struct NodeGroup makesheet(float x,float y,int wc,int hc,float spacing,float ela
                 Vector2Zero(),
                 0
             };
-            if (rand() % 100 == 0 ) nodegroup.nodes[i].anchored = 1;
+            if (rand() % ANCHOR_PROBABILITY == 0) nodegroup.nodes[i].anchored = 1;
 
             if (xn < wc - 1) {
                 nodegroup.conns[conn_ind++] = (struct Connection) {
@@ -52,17 +53,17 @@ int main(void)
 {   
     srand(time(NULL)); 
 
-    struct NodeGroup mainsheet = makesheet(50.0f,50.0f,200,200,3.0f,1000.0f);
+    struct NodeGroup mainsheet = makesheet(SHEET_START_X,SHEET_START_Y,SHEET_WC,SHEET_HC,SHEET_SPACING,SHEET_ELASTIC_COEFF);
     
     // Initialization
-    const int screenWidth = 700;
-    const int screenHeight = 700;
+    const int screenWidth = SCREEN_WIDTH;
+    const int screenHeight = SCREEN_HEIGHT;
 
     InitWindow(screenWidth, screenHeight, "raylib [core] example - input keys");
     
     
     
-    SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
+    SetTargetFPS(TARGET_FPS);               // Set our game to run at TARGET_FPS frames-per-second
     int draw_amount = 0;
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key

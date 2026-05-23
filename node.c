@@ -1,6 +1,8 @@
 #include "node.h"
 #include "raymath.h"
 
+#include "config.h"
+
 void UpdateConnForces(struct Connection* conn){
     Vector2 deltav = Vector2Subtract(conn->b->position_vec,conn->a->position_vec);
     float size = Vector2Length(deltav);
@@ -21,6 +23,10 @@ void ApplyNodeGravity(struct Node* node, float gravity_force){
     node->force_vec = Vector2Add(node->force_vec ,(Vector2) {0,gravity_force});
 }
 
+void ApplyNodeDrag(struct Node* node, float drag_factor){
+    node->force_vec = Vector2Scale(node->force_vec, drag_factor);	
+}
+
 void UpdateNodeVelAndPos(struct Node* node,float deltatime){
     node->velocity_vec = Vector2Add(node->velocity_vec, Vector2Scale(node->force_vec,deltatime));
     node->position_vec = Vector2Add(node->position_vec, Vector2Scale(node->velocity_vec,deltatime));
@@ -29,13 +35,14 @@ void UpdateNodeVelAndPos(struct Node* node,float deltatime){
 void UpdateNodeGroup(struct NodeGroup* nodegroup,float deltatime){
     for (int node_ind = 0; node_ind < nodegroup->node_amount; node_ind++){
         ZeroNodeForce(&nodegroup->nodes[node_ind]);
-        ApplyNodeGravity(&nodegroup->nodes[node_ind],100.0f);
+        ApplyNodeGravity(&nodegroup->nodes[node_ind],GRAVITY_FORCE);
     }
     for (int conn_ind = 0; conn_ind < nodegroup->conn_amount; conn_ind++){
         UpdateConnForces(&nodegroup->conns[conn_ind]);            
     }
     for (int node_ind = 0; node_ind < nodegroup->node_amount; node_ind++){
         if (nodegroup->nodes[node_ind].anchored) continue;
+        ApplyNodeDrag(&nodegroup->nodes[node_ind],DRAG_FACTOR);
         UpdateNodeVelAndPos(&nodegroup->nodes[node_ind],deltatime);
     }
 }
